@@ -172,42 +172,25 @@ export class DatatypeService {
 
   async getDetails() {
     try {
-      // Todo: getDetails의 값을 리턴해야 합니다.
-      // ⚠️ bigint 타입은 JSON으로 변환 시 string으로 변환 필요
-      const result = await this.ethersService.getDetails();
-
-      // console.log('리저트1번 : ', result);
-
-      // result[0] = result[0].toString();
-      // result[1] = result[1].toString();
-      // result[7] = result[7].toString();
-
+      const details = await this.ethersService.getDetails();
+      // const result = details.map((item) => {
+      //   if (typeof item === 'bigint') {
+      //     return item.toString();
+      //   } else {
+      //     return item;
+      //   }
+      // });
       // return result;
 
-      const positiveNumber = result[0].toString();
-      const negativeNumber = result[1].toString();
-      const isActive = result[2];
-      const wallet = result[3];
-      const recipient = result[4];
-      const fixedData = result[5];
-      const dynamicData = result[6];
-      const currentState = result[7].toString();
+      const parsed = JSON.parse(
+        JSON.stringify(details, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value
+        )
+      );
 
-      return {
-        positiveNumber,
-        negativeNumber,
-        isActive,
-        wallet,
-        recipient,
-        fixedData,
-        dynamicData,
-        currentState
-      };
-
-
+      return parsed;
     } catch (error) {
       console.error(error);
-      throw error;
     }
   }
 }
