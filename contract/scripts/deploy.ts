@@ -8,9 +8,16 @@ async function main() {
 
   // Todo: 배포하기 위한 script를 만들어주세요.
 
-  console.log(`DataType contract deployed at: ${contract.target}`);
+  const recipient = deployer.address;
 
-  await makeAbi(`DataType`, contract.target);
+  const DataType = await ethers.getContractFactory("DataType");
+  const dataType = await DataType.deploy(recipient);
+
+  await dataType.waitForDeployment();
+
+  console.log(`DataType contract deployed at: ${dataType.target}`);
+
+  await makeAbi(`DataType`, dataType.target);
 }
 
 main().catch((error) => {
